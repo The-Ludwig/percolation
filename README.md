@@ -1,7 +1,7 @@
 Percolation HTML 5 SVG
 ===
 
-[Live Demo](https://the-ludwig.github.io/perculation/)
+[Live Demo](https://the-ludwig.github.io/percolation/)
 
 This is procastination on a different level.
 
