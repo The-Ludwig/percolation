@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perculation</title>
+</head>
+
+<body>
+  <div id="app">
+    <h1><a href="https://en.wikipedia.org/wiki/Percolation_theory">Percolation</a></h1>
+    <svg id="mySVG"></svg>
+
+    <button id="percButton">Percolate</button>
+
+    <label for="pSlider">Cowbell</label>
+    <input id="pSlider" type="range" min="0" max="1" step="0.01" value="0.5">
+    <hr>
+
+    <label for="xSlider">Cowbell</label>
+    <input id="xSlider" type="range" min="1" max="200" value="10">
+    <hr>
+
+    <label for="ySlider">Cowbell</label>
+    <input id="ySlider" step="1" type="range" min="1" max="200" value="10">
+    <p>
+      p is the probability that a given site is occupied (black dot).
+      N_x is the number of sites in x direction.
+      N_y is the number of sites in y direction.
+      <br>
+      You can zoom and slide in the frame.
+      Click to reset zoom level.
+      <br>
+      Observe if you can find a continous line between two opposite borders.
+      <br>
+      Look
+      at what happens arount p=0.59 (critical 'temperature' for this problem).
+    </p>
+    <p>Source and Information: </p>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
