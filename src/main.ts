@@ -157,14 +157,14 @@ async function label_all_clusters(): Promise<{[cluster: number]: Array<GridLine 
     a.html = this as SVGLineElement;
   });
 
-  for(let line of grid_lines){
-    line.html.addEventListener('mouseover', (e)=>{
-      hightlight_cluster(ret[e.target.__data__.cluster])
-    });
-    line.html.addEventListener('mouseleave', (e)=>{
-      dehightlight_cluster(ret[e.target.__data__.cluster])
-    })
-  }
+  // for(let line of grid_lines){
+  //   line.html.addEventListener('mouseover', (e)=>{
+  //     hightlight_cluster(ret[e.target.__data__.cluster])
+  //   });
+  //   line.html.addEventListener('mouseleave', (e)=>{
+  //     dehightlight_cluster(ret[e.target.__data__.cluster])
+  //   })
+  // }
 
   return ret;
 }
