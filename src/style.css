@@ -19,7 +19,7 @@ hr {
   margin-bottom: 20px;
 }
 
-button {
+button, select {
   margin: 10px;
   width: 200px;
   height: 50px;
@@ -34,4 +34,29 @@ svg {
   max-width: 97%;
   width: 600px;
   height: 600px;
+}
+
+line {
+  margin: 10px;
+}
+
+g {
+  pointer-events: visible;
+  background-color: white;
+}
+
+.highlight:hover > line {
+  stroke: red;
+}
+
+.highlight:hover > circle.active {
+  fill: red;
+}
+
+.highlight > line {
+  stroke: black;
+}
+
+.highlight > line.build {
+  stroke: black;
 }
