@@ -45,18 +45,18 @@ g {
   background-color: white;
 }
 
-.highlight:hover > line {
+.highlight:hover >* line {
   stroke: red;
 }
 
-.highlight:hover > circle.active {
+.highlight:hover >* circle.active {
   fill: red;
 }
 
-.highlight > line {
+.highlight >* line {
   stroke: black;
 }
 
-.highlight > line.build {
+.highlight >* line.build {
   stroke: black;
 }

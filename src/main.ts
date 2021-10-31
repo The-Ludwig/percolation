@@ -310,7 +310,7 @@ class Field {
       dy = (this.height - 2 * y0) / (this.ny - 1);
       y0 = y0 + dy / 2
       dx = dy / xbyy;
-      x0 = y0 + (this.width - dx * 3 / 4 * this.nx) / 2;
+      x0 = this.r + 5 + (this.width - dx * 3 / 4 * this.nx) / 2;
     }
 
     delete this.grid_points;
@@ -455,10 +455,19 @@ class Field {
   private draw() {
     let gs =
       this.view
-        .selectAll('g')
+        .selectChildren('g')
         .data(this.clusters)
         .join('g')
         .attr('class', 'highlight');
+
+    gs
+      .append('g')
+      .attr('id', 'lines');
+
+    gs
+      .append('g')
+      .attr('id', 'circles');
+
 
     let board_size = this.nx * this.ny;
     // this ensures approximataly constant time per animation
@@ -467,7 +476,23 @@ class Field {
     // we multiply with a strict monotonic function of the board_size
     line_dur = line_dur * 0.01 * Math.pow(board_size, 0.5)
 
-    gs
+    gs.select('#circles')
+      .selectAll('circle')
+      .data((d, i) => d.points.map((p) => { return { point: p, color: `hsl(${i * 360 / d.points.length}, 90%, 31%)` } }))
+      .join('circle')
+      .transition()
+      .duration(this.anim_ms)
+      .attr("cx", d => d.point.x)
+      .attr("cy", d => d.point.y)
+      .attr("r", String(this.r))
+      .attr('fill', 'black')
+      .attr('class', d => d.point.occupied ? 'active' : '')
+      .transition()
+      .delay(this.anim_wait)
+      .duration(this.anim_ms)
+      .attr('fill', d => d.point.occupied ? d.color : 'transparent')
+
+    gs.select('#lines')
       .selectAll('line')
       .data(d => d.lines)
       .join('line')
@@ -488,21 +513,7 @@ class Field {
       .attr('class', '')
 
 
-    gs
-      .selectAll('circle')
-      .data((d, i) => d.points.map((p) => { return { point: p, color: `hsl(${i * 360 / d.points.length}, 90%, 31%)` } }))
-      .join('circle')
-      .transition()
-      .duration(this.anim_ms)
-      .attr("cx", d => d.point.x)
-      .attr("cy", d => d.point.y)
-      .attr("r", String(this.r))
-      .attr('fill', 'black')
-      .attr('class', d => d.point.occupied ? 'active' : '')
-      .transition()
-      .delay(this.anim_wait)
-      .duration(this.anim_ms)
-      .attr('fill', d => d.point.occupied ? d.color : 'transparent')
+
   }
 
   private init() {
