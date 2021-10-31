@@ -6,9 +6,9 @@
   <link rel="icon" type="image/svg+xml" href="./assets/favicon.6ff25b33.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Percolation</title>
-  <script type="module" crossorigin src="./assets/index.e0db5ef9.js"></script>
+  <script type="module" crossorigin src="./assets/index.d178f351.js"></script>
   <link rel="modulepreload" href="./assets/vendor.f720daf1.js">
-  <link rel="stylesheet" href="./assets/index.89a9d367.css">
+  <link rel="stylesheet" href="./assets/index.e3202874.css">
 </head>
 
 <body>
@@ -23,13 +23,22 @@
     <hr>
 
     <label for="xSlider">Cowbell</label>
-    <input id="xSlider" type="range" min="1" max="200" value="10">
+    <input id="xSlider" type="range" min="2" max="200" value="10">
     <hr>
 
     <label for="ySlider">Cowbell</label>
-    <input id="ySlider" step="1" type="range" min="1" max="200" value="10">
+    <input id="ySlider" step="1" type="range" min="2" max="200" value="10">
+    <hr>
+
+    <select name="lattice" id="lattice-select">
+      <option value="triangular">Triangular</option>
+      <option value="square">Square</option>
+      <!-- <option value="ugly_square">Unequal Square</option> -->
+    </select>
+
     <p>
       p is the probability that a given site is occupied (black dot).
+      If two nearest neighbour sites are occupied, they get connected.
       N_x is the number of sites in x direction.
       N_y is the number of sites in y direction.
       <br>
@@ -37,9 +46,18 @@
       Click to reset zoom level.
       <br>
       Observe if you can find a continous line between two opposite borders.
+      This will happen (for infinite systems "Thermodynamik Limit") at an
+      precise value of p ("Critical Temperature").
       <br>
-      Look
-      at what happens arount p=0.59 (critical 'temperature' for this problem).
+      For the triangular lattice the critical value is at approximately "p=0.5".
+      For the square lattice the critical value is at about "p=0.59".
+      (For the triangular lattice to see that approximation:
+      Replace 3 sites (forming a triangle),
+      with a single site, which is occupied if most of the original sites were occupied.
+      What is the probability p' that this new site is occupied in dependence of the old probability?
+      Solution: p' = p^3+3*p^2*(p-1)
+      What are the fixed points (p' = p) of this recursion?
+      Solution: p=0, p=1 and p=0.5 are the fixed points.)
     </p>
     <p>Source and Information: <a
         href='https://github.com/The-Ludwig/perculation'>https://github.com/The-Ludwig/perculation</a></p>
