@@ -1,7 +1,7 @@
 import './style.css'
 import * as d3 from "d3";
 
-type lattice_types = "triangular" | "square" | "ugly_square";
+type lattice_types = "triangular" | "square" | "ugly_square" | "honeycomb";
 
 class Field {
 
@@ -120,8 +120,8 @@ class Field {
 
   }
 
-  private recalc_r() {
-    this.r = Math.min(this.width / this.nx, this.height / this.ny) / 3
+  private recalc_r(wx = 1, wy = 1) {
+    this.r = Math.min(this.width * wx / this.nx, this.height * wy / this.ny) / 3;
   }
 
   private calc_occupation() {
@@ -140,6 +140,9 @@ class Field {
         break;
       case "ugly_square":
         this.non_square_lattice();
+        break;
+      case "honeycomb":
+        this.honeycomb_lattice();
         break;
       default:
         this.triangular_lattice();
@@ -180,16 +183,19 @@ class Field {
 
     let x0, y0, dx, dy;
 
-    if (this.nx >= this.ny) {
+    // this is the ratio of x to y (for the triangle sites to be equilateral)
+    let xbyy = Math.sqrt(3) / 2
+
+    if (this.nx * xbyy >= this.ny) {
       x0 = this.r + 5;
       dx = (this.width - 2 * x0) / (this.nx - 1);
-      dy = dx;
-      y0 = x0 + (this.height - this.width / this.nx * this.ny) / 2;
+      dy = dx / (xbyy);
+      y0 = x0 + (this.height - dy * this.ny) / 2;
     } else {
       y0 = this.r + 5;
       dy = (this.height - 2 * y0) / (this.ny - 1);
-      dx = dy;
-      x0 = (this.width - this.height / this.ny * this.nx) / 2;
+      dx = dy * xbyy;
+      x0 = y0 + (this.width - dx * this.nx) / 2;
     }
 
     delete this.grid_points;
@@ -203,7 +209,7 @@ class Field {
       let fac = x % 2;
 
       for (let y = 0; y < this.ny - fac; y++) {
-        let gp = new GridPoint(x0 + dx * x, y0 + dy * y + fac * dx / 2, Math.random() < this.p);
+        let gp = new GridPoint(x0 + dx * x, y0 + dy * y + fac * dy / 2, Math.random() < this.p);
 
         if (x != 0 && y != this.ny - 1) {
           let n = this.grid_points[get_index(x - 1, y)];
@@ -265,6 +271,102 @@ class Field {
 
         this.grid_points.push(gp);
       }
+  }
+
+  private honeycomb_lattice() {
+    this.recalc_r(1, 0.5);
+
+    let x0, y0, dx, dy;
+
+    // this is the ratio of x to y (for the triangle sites to be equilateral)
+    let xbyy = Math.sqrt(3)
+    function get_extra(n) {
+      let extra;
+      switch ((n - 1) % 4) {
+        case 0:
+          extra = 0;
+          break;
+        case 1:
+          extra = 0.5;
+          break;
+        case 2:
+          extra = 1.5;
+          break;
+        case 3:
+          extra = 2;
+          break;
+      }
+      return extra;
+    }
+
+    if (this.nx * 3 / 4 >= this.ny) {
+      let extra = get_extra(this.nx);
+      x0 = this.r + 5;
+      dx = (this.width - 2 * x0) / (3 * Math.floor((this.nx - 1) / 4) + extra);
+      dy = dx * (xbyy);
+      y0 = x0 + dy + (this.height - dy * this.ny) / 2;
+    } else {
+      y0 = this.r + 5;
+      dy = (this.height - 2 * y0) / (this.ny - 1);
+      y0 = y0 + dy / 2
+      dx = dy / xbyy;
+      x0 = y0 + (this.width - dx * 3 / 4 * this.nx) / 2;
+    }
+
+    delete this.grid_points;
+    this.grid_points = [];
+
+    let get_index = (x: number, y: number) => {
+      return x * this.ny + y - (Math.ceil(x / 4) + Math.floor(x / 4));
+    }
+
+    for (let x = 0; x < this.nx; x++) {
+      let period = x % 4;
+      let fac = period == 1 || period == 2 ? 1 : 0;
+
+      for (let y = 0; y < this.ny - 1 + fac; y++) {
+        let gp = new GridPoint(x0 + dx * (x - Math.floor((x + 1) / 2) / 2), y0 + dy * y - fac * dy / 2, Math.random() < this.p);
+        switch (period) {
+          case 0:
+            if (x != 0) {
+              let n = this.grid_points[get_index(x - 1, y)];
+              n.neighbours.push(gp);
+              gp.neighbours.push(n);
+            }
+            break;
+          case 1:
+            if (y != 0) {
+              let n = this.grid_points[get_index(x - 1, y - 1)];
+              n.neighbours.push(gp);
+              gp.neighbours.push(n);
+            }
+            if (y != this.ny - 2 + fac) {
+              let n = this.grid_points[get_index(x - 1, y)];
+              n.neighbours.push(gp);
+              gp.neighbours.push(n);
+            }
+            break;
+          case 2:
+            if (x != 0) {
+              let n = this.grid_points[get_index(x - 1, y)];
+              n.neighbours.push(gp);
+              gp.neighbours.push(n);
+            }
+            break;
+          case 3:
+            let n = this.grid_points[get_index(x - 1, y + 1)];
+            n.neighbours.push(gp);
+            gp.neighbours.push(n);
+
+            n = this.grid_points[get_index(x - 1, y)];
+            n.neighbours.push(gp);
+            gp.neighbours.push(n);
+            break;
+        }
+
+        this.grid_points.push(gp);
+      }
+    }
   }
 
   private calc_lines() {
@@ -351,8 +453,6 @@ class Field {
   }
 
   private draw() {
-    this.recalc_r();
-
     let gs =
       this.view
         .selectAll('g')
@@ -390,19 +490,19 @@ class Field {
 
     gs
       .selectAll('circle')
-      .data(d => d.points)
+      .data((d, i) => d.points.map((p) => { return { point: p, color: `hsl(${i * 360 / d.points.length}, 90%, 31%)` } }))
       .join('circle')
       .transition()
       .duration(this.anim_ms)
-      .attr("cx", d => d.x)
-      .attr("cy", d => d.y)
-      .attr("r", this.r)
+      .attr("cx", d => d.point.x)
+      .attr("cy", d => d.point.y)
+      .attr("r", String(this.r))
       .attr('fill', 'black')
-      .attr('class', d => d.occupied ? 'active' : '')
+      .attr('class', d => d.point.occupied ? 'active' : '')
       .transition()
       .delay(this.anim_wait)
       .duration(this.anim_ms)
-      .attr('fill', d => d.occupied ? 'black' : 'transparent')
+      .attr('fill', d => d.point.occupied ? d.color : 'transparent')
   }
 
   private init() {
