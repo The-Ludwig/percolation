@@ -6,7 +6,8 @@ jobs:
     name: "Test Rust"
     runs-on: ubuntu-latest
     defaults: 
-      working-directory: percolation-rust
+      run:
+        working-directory: percolation-rust
 
     steps:
       - uses: actions/checkout@v2
