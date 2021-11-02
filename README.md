@@ -1,5 +1,7 @@
 Percolation HTML 5 SVG
 ===
+[![.github/workflows/test-rust.yml](https://github.com/The-Ludwig/percolation/actions/workflows/test-rust.yml/badge.svg)](https://github.com/The-Ludwig/percolation/actions/workflows/test-rust.yml)
+[![Release Webpage](https://github.com/The-Ludwig/percolation/actions/workflows/release.yml/badge.svg)](https://github.com/The-Ludwig/percolation/actions/workflows/release.yml)
 
 [Live Demo](https://the-ludwig.github.io/percolation/)
 
