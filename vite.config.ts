@@ -3,12 +3,11 @@ import { defineConfig } from 'vite'
 export default defineConfig(({ command, mode }) => {
   if (command === 'serve') {
     return {
-      base: '/'
+      base: '/',
     }
   } else {
     return {
-      base: './'
+      base: './',
     }
   }
 })
-

@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./percolation-rust/Cargo.toml"
+    ]
+}
