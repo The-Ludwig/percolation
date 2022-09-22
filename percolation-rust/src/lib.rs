@@ -20,14 +20,31 @@ pub fn greet() {
 }
 
 #[wasm_bindgen]
+pub struct Universe {
+    points: Vec<GridPoint>,
+}
+
+#[wasm_bindgen]
+impl Universe {
+    pub fn all_points(&self) -> *const GridPoint {
+        self.points.as_ptr()
+    }
+}
+
+#[wasm_bindgen]
 pub struct GridPoint {
     pub x: isize,
     pub y: isize,
+    pub occupied: bool,
 }
 
 impl GridPoint {
     fn new(x: isize, y: isize) -> GridPoint {
-        GridPoint { x: x, y: y }
+        GridPoint {
+            x: x,
+            y: y,
+            occupied: false,
+        }
     }
 }
 

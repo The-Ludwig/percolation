@@ -3,10 +3,6 @@ import * as d3 from "d3";
 import init, { greet } from "percolation-rust";
 
 await init();
-
-greet();
-
-
 type lattice_types = "triangular" | "square" | "ugly_square" | "honeycomb";
 
 class Field {
